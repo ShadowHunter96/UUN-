@@ -26,6 +26,8 @@ public class Company {
     @Id
     private Long id;
     private String name;
+    @Column(name = "company_description")
+    private String companyDescription;
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "company",cascade = CascadeType.ALL)
     @JsonBackReference()
     private List<TechJob> techJobList;
