@@ -26,11 +26,13 @@ public class TechJobController {
     }
     @PostMapping("/techJob")
     public ResponseEntity<?>saveTechJob(@RequestBody TechJob techJob){
-        if (techJobRepository.existsById(techJob.getId())){
+        try {
+            techJobRepository.save(techJob);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (RuntimeException e){
+
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        techJobRepository.save(techJob);
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @PostMapping("/techJobs/batch")
     public ResponseEntity<?> saveTechJobs(@RequestBody List<TechJob> techJobs) {
