@@ -1,12 +1,15 @@
 package com.example.fullstack_backend.controller;
 
 import com.example.fullstack_backend.model.Applicant;
+import com.example.fullstack_backend.model.TechJob;
 import com.example.fullstack_backend.repository.ApplicantRepository;
+import com.example.fullstack_backend.repository.TechJobRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by User: Vu
@@ -18,9 +21,11 @@ import java.util.List;
 @CrossOrigin("http://localhost:3000")
 public class ApplicantController {
     private final ApplicantRepository applicantRepository;
+    private final TechJobRepository techJobRepository;
 
-    public ApplicantController(ApplicantRepository applicantRepository) {
+    public ApplicantController(ApplicantRepository applicantRepository, TechJobRepository techJobRepository) {
         this.applicantRepository = applicantRepository;
+        this.techJobRepository = techJobRepository;
     }
 
     @PostMapping("/save")
@@ -83,4 +88,28 @@ public class ApplicantController {
                 })
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @PostMapping("/{applicantId}/apply/{techJobId}")
+    public ResponseEntity<?> applyToTechJob(@PathVariable Long applicantId, @PathVariable Long techJobId) {
+        Optional<Applicant> applicantOptional = applicantRepository.findById(applicantId);
+        Optional<TechJob> techJobOptional = techJobRepository.findById(techJobId);
+
+        if (applicantOptional.isPresent() && techJobOptional.isPresent()) {
+            Applicant applicant = applicantOptional.get();
+            TechJob techJob = techJobOptional.get();
+
+            // Propojení entit
+            techJob.getApplicants().add(applicant);
+            applicant.getTechJobs().add(techJob);
+
+            // Uložení změn
+            techJobRepository.save(techJob);
+            applicantRepository.save(applicant);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Applicant or TechJob not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

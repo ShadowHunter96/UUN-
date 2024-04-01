@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by User: Vu
@@ -47,5 +49,11 @@ public class TechJob {
     @JoinColumn(name = "company_id")
     Company company;
 
-
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "techjob_applicant",
+            joinColumns = @JoinColumn(name = "techjob_id"),
+            inverseJoinColumns = @JoinColumn(name = "applicant_id")
+    )
+    private Set<Applicant> applicants = new HashSet<>();
 }

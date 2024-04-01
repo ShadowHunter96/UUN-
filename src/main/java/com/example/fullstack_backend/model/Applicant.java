@@ -5,6 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.springframework.context.annotation.Lazy;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by User: Vu
@@ -28,5 +33,8 @@ public class Applicant {
     private String phoneNumber;
     private String selfDescription;
     private String linkedInUrl;
+
+    @ManyToMany(mappedBy = "applicants")
+    private Set<TechJob> techJobs = new HashSet<>();
 
 }
