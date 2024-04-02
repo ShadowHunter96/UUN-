@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.springframework.context.annotation.Lazy;
+
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +27,7 @@ public class Applicant {
     private Long id;
     private String name;
     private String surname;
+    @Column(unique = true)
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;

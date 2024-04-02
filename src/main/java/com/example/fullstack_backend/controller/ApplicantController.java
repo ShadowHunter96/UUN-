@@ -111,5 +111,18 @@ public class ApplicantController {
             return new ResponseEntity<>("Applicant or TechJob not found", HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/applicant/search/by-name-and-surname")
+    public Optional<Long> getApplicantIdByNameAndSurname(@RequestParam String name, @RequestParam String surname) {
+        Optional<Long> applicantID = applicantRepository.findApplicantIdByNameAndSurname(name, surname);
+        return applicantID;
+    }
+
+    @GetMapping("/search/by-email")
+    public ResponseEntity<Long> getApplicantIdByEmail(@RequestParam String email) {
+        return applicantRepository.findApplicantByEmail(email)
+                .map(applicant -> ResponseEntity.ok(applicant.getId()))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 
 }
