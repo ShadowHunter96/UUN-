@@ -74,5 +74,43 @@ public class TechJobController {
         techJobRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PutMapping("/techJob/{id}/approve")
+    public ResponseEntity<?> approveTechJob(@PathVariable Long id) {
+        Optional<TechJob> techJobOptional = techJobRepository.findById(id);
+
+        if (!techJobOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        TechJob techJob = techJobOptional.get();
+        techJob.setApproved(true);
+        techJobRepository.save(techJob);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/techJob/decline/{id}")
+    public ResponseEntity<?> declineTechJob(@PathVariable Long id) {
+        Optional<TechJob> techJobOptional = techJobRepository.findById(id);
+        if (!techJobOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        TechJob techJob = techJobOptional.get();
+        techJob.setApproved(false); // or you could set a separate 'declined' flag if you have one
+        techJobRepository.save(techJob);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/approved")
+    public ResponseEntity<List<TechJob>> getApprovedTechJobs() {
+        List<TechJob> approvedTechJobs = techJobRepository.findByApprovedTrue();
+        if (approvedTechJobs.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(approvedTechJobs, HttpStatus.OK);
+    }
+
+
+
 
 }

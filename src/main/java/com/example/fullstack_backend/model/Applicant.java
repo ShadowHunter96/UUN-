@@ -1,5 +1,6 @@
 package com.example.fullstack_backend.model;
 
+import com.example.fullstack_backend.enums.Seniority;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +34,8 @@ public class Applicant {
     private String phoneNumber;
     private String selfDescription;
     private String linkedInUrl;
+    @Enumerated(EnumType.STRING)
+    private Seniority seniority;
 
     @ManyToMany(mappedBy = "applicants")
     private Set<TechJob> techJobs = new HashSet<>();

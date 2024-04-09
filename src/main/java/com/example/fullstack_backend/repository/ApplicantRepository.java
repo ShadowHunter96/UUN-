@@ -19,4 +19,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant,Long> {
     Optional<Applicant> findApplicantByEmail(String email);
 
 
+
+
+
 }

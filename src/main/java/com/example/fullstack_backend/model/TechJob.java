@@ -56,4 +56,7 @@ public class TechJob {
             inverseJoinColumns = @JoinColumn(name = "applicant_id")
     )
     private Set<Applicant> applicants = new HashSet<>();
+    @Column(nullable = false)
+    private boolean approved = false;
+
 }

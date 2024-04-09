@@ -3,6 +3,8 @@ package com.example.fullstack_backend.repository;
 import com.example.fullstack_backend.model.TechJob;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Created by User: Vu
  * Date: 22.02.2024
@@ -10,4 +12,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 
 public interface TechJobRepository extends JpaRepository<TechJob,Long> {
+    List<TechJob> findByApprovedTrue();
 }
