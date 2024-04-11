@@ -1,10 +1,7 @@
 package com.example.fullstack_backend.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Blob;
 
@@ -19,6 +16,7 @@ import java.sql.Blob;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class LinkEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -26,7 +24,8 @@ public class LinkEntity {
     private String name;
     private String url;
     @Lob
-    private Blob image;
+    private byte[] image;
+    private String imageBase64;
     private String description;
     private boolean availableInFirefox;
     private boolean availableInChrome;

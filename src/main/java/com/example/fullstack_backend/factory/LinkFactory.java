@@ -18,6 +18,7 @@ public class LinkFactory {
         dto.setName(link.getName());
         dto.setUrl(link.getUrl());
         dto.setImage(link.getImage());
+        dto.setImageBase64(link.getImageBase64());
         dto.setDescription(link.getDescription());
         dto.setAvailableInFirefox(link.isAvailableInFirefox());
         dto.setAvailableInChrome(link.isAvailableInChrome());
@@ -31,6 +32,7 @@ public class LinkFactory {
         link.setName(dto.getName());
         link.setUrl(dto.getUrl());
         link.setImage(dto.getImage());
+        link.setImageBase64(dto.getImageBase64());
         link.setDescription(dto.getDescription());
         link.setAvailableInFirefox(dto.isAvailableInFirefox());
         link.setAvailableInChrome(dto.isAvailableInChrome());

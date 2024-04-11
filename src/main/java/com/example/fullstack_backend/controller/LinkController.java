@@ -3,6 +3,7 @@ package com.example.fullstack_backend.controller;
 import com.example.fullstack_backend.model.LinkDTO;
 import com.example.fullstack_backend.model.LinkEntity;
 import com.example.fullstack_backend.service.LinkService;
+import com.example.fullstack_backend.utils.ImageUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,9 +58,7 @@ public class LinkController {
         linkDTO.setOpenInNewWindow(openInNewWindow);
 
         if (image != null && !image.isEmpty()) {
-            byte[] bytes = image.getBytes();
-            Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
-            linkDTO.setImage(blob);
+            linkDTO.setImage(ImageUtils.compressImage(image.getBytes()));
         }
 
         LinkDTO savedLink = linkService.saveLink(linkDTO);
@@ -92,9 +91,7 @@ public class LinkController {
         linkDTO.setOpenInNewWindow(openInNewWindow);
 
         if (image != null && !image.isEmpty()) {
-            byte[] bytes = image.getBytes();
-            Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
-            linkDTO.setImage(blob);
+            linkDTO.setImage(ImageUtils.compressImage(image.getBytes()));
         }
 
         LinkDTO updatedLink = linkService.updateLink(linkDTO);
@@ -111,5 +108,23 @@ public class LinkController {
         return linkDTO.map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+    @GetMapping("/links/{id}/image")
+    public ResponseEntity<byte[]> getLinkImage(@PathVariable Long id) {
+        try {
+            byte[] image = linkService.downloadImage(id);
+            if (image != null) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_PNG)
+                        .body(image);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+
 }
 

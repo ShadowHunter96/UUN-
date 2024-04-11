@@ -1,9 +1,7 @@
 package com.example.fullstack_backend.model;
 
 import jakarta.persistence.Lob;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Blob;
 
@@ -16,12 +14,15 @@ import java.sql.Blob;
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class LinkDTO {
     private Long id;
     private String name;
     private String url;
     @Lob
-    private Blob image;
+    private byte[] image;
+    private String imageBase64;
     private String description;
     private boolean availableInFirefox;
     private boolean availableInChrome;
