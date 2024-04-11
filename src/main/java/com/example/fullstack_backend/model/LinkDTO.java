@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Blob;
+
 /**
  * Created by User: Vu
  * Date: 10.04.2024
@@ -19,7 +21,7 @@ public class LinkDTO {
     private String name;
     private String url;
     @Lob
-    private byte[] imageData;
+    private Blob image;
     private String description;
     private boolean availableInFirefox;
     private boolean availableInChrome;
