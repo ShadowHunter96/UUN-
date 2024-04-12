@@ -31,5 +31,6 @@ public class LinkEntity {
     private boolean availableInChrome;
     private boolean isActive;
     private boolean openInNewWindow;
+    private boolean deleted;
 
 }

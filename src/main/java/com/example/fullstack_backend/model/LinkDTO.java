@@ -28,4 +28,5 @@ public class LinkDTO {
     private boolean availableInChrome;
     private boolean isActive;
     private boolean openInNewWindow;
+    private boolean deleted;
 }

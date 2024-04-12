@@ -24,6 +24,7 @@ public class LinkFactory {
         dto.setAvailableInChrome(link.isAvailableInChrome());
         dto.setActive(link.isActive());
         dto.setOpenInNewWindow(link.isOpenInNewWindow());
+        dto.setDeleted(link.isDeleted());
         return dto;
     }
 
@@ -38,10 +39,11 @@ public class LinkFactory {
         link.setAvailableInChrome(dto.isAvailableInChrome());
         link.setActive(dto.isActive());
         link.setOpenInNewWindow(dto.isOpenInNewWindow());
+        link.setDeleted(dto.isDeleted());
     }
 
     public static void deactivateLink(LinkEntity link) {
-        link.setActive(false);
+        link.setDeleted(true);
     }
 
 
