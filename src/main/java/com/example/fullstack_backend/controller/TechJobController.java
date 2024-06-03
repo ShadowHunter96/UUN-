@@ -89,7 +89,7 @@ public class TechJobController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/techJob/decline/{id}")
+    @PutMapping("/techJob/{id}/decline")
     public ResponseEntity<?> declineTechJob(@PathVariable Long id) {
         Optional<TechJob> techJobOptional = techJobRepository.findById(id);
         if (!techJobOptional.isPresent()) {

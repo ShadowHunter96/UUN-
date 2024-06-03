@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 
 
 import java.util.HashSet;
@@ -39,5 +40,7 @@ public class Applicant {
 
     @ManyToMany(mappedBy = "applicants")
     private Set<TechJob> techJobs = new HashSet<>();
+    @Column(name = "deleted",columnDefinition = "boolean default false")
+    private boolean deleted;
 
 }

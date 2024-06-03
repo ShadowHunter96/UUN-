@@ -81,12 +81,10 @@ public class ApplicantController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteApplicant(@PathVariable Long id) {
-        return applicantRepository.findById(id)
-                .map(applicant -> {
-                    applicantRepository.delete(applicant);
-                    return new ResponseEntity<>(HttpStatus.OK);
-                })
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Applicant applicant = applicantRepository.findById(id).orElseThrow(()->new RuntimeException("applicant not found"));
+        applicant.setDeleted(true);
+
+        return new ResponseEntity<>(applicant, HttpStatus.OK);
     }
 
     @PostMapping("/{applicantId}/apply/{techJobId}")
