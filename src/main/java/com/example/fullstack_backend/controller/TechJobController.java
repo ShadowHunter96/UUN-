@@ -1,8 +1,11 @@
 package com.example.fullstack_backend.controller;
 
+import com.example.fullstack_backend.factory.TechJobFactory;
 import com.example.fullstack_backend.model.TechJob;
+import com.example.fullstack_backend.model.TechJobDto;
 import com.example.fullstack_backend.model.User;
 import com.example.fullstack_backend.repository.TechJobRepository;
+import com.example.fullstack_backend.service.TechJobService;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -20,15 +23,15 @@ import java.util.Optional;
 @RestController
 @CrossOrigin("http://localhost:3000")
 public class TechJobController {
-    TechJobRepository techJobRepository;
-    public TechJobController(TechJobRepository techJobRepository){
-        this.techJobRepository = techJobRepository;
+    TechJobService techJobService;
+    public TechJobController(TechJobService techJobService){
+        this.techJobService = techJobService;
     }
     @PostMapping("/techJob")
-    public ResponseEntity<?>saveTechJob(@RequestBody TechJob techJob){
+    public ResponseEntity<?>saveTechJob(@RequestBody TechJobDto techJobDto){
         try {
-            techJobRepository.save(techJob);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            techJobService.saveTechJob(techJobDto);
+            return new ResponseEntity<>(techJobDto,HttpStatus.CREATED);
         }catch (RuntimeException e){
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -41,72 +44,48 @@ public class TechJobController {
             techJob.setId(null);
 
             // Save the techJob
-            techJobRepository.save(techJob);
+            techJobService.saveTechJob(TechJobFactory.fromEntity(techJob));
         }
         return new ResponseEntity<>(techJobs,HttpStatus.CREATED);
     }
 
     @GetMapping("/techJobs")
-    public ResponseEntity<List<TechJob>> getAllTechJobs() {
-        List<TechJob> techJobs = techJobRepository.findAll();
+    public ResponseEntity<List<TechJobDto>> getAllTechJobs() {
+        List<TechJobDto> techJobs = techJobService.findAllTechJobs();
         return new ResponseEntity<>(techJobs, HttpStatus.OK);
     }
     @GetMapping("/techJob/{id}")
-    public ResponseEntity<TechJob> getTechJobById(@PathVariable Long id) {
-        Optional<TechJob> techJobOptional = techJobRepository.findById(id);
-        return techJobOptional.map(techJob -> new ResponseEntity<>(techJob, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<TechJobDto> getTechJobById(@PathVariable Long id) {
+        TechJobDto dto =  techJobService.findDtoById(id);
+        return new ResponseEntity<>(dto,HttpStatus.OK);
     }
     @PutMapping("/techJob/{id}")
-    public ResponseEntity<?> updateTechJob(@PathVariable Long id, @RequestBody TechJob updatedTechJob) {
-        if (!techJobRepository.existsById(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        updatedTechJob.setId(id);
-        techJobRepository.save(updatedTechJob);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> updateTechJob(@PathVariable Long id, @RequestBody TechJobDto updatedTechJob) {
+        TechJobDto dto =  techJobService.updateTechJob(id,updatedTechJob);
+        return new ResponseEntity<>(dto,HttpStatus.OK);
     }
     @DeleteMapping("/techJob/{id}")
     public ResponseEntity<?> deleteTechJob(@PathVariable Long id) {
-        if (!techJobRepository.existsById(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        techJobRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        String message =  techJobService.deleteTechJob(id);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
     @PutMapping("/techJob/{id}/approve")
     public ResponseEntity<?> approveTechJob(@PathVariable Long id) {
-        Optional<TechJob> techJobOptional = techJobRepository.findById(id);
-
-        if (!techJobOptional.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        TechJob techJob = techJobOptional.get();
-        techJob.setApproved(true);
-        techJobRepository.save(techJob);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        String message = techJobService.approveTechJob(id);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @PutMapping("/techJob/{id}/decline")
     public ResponseEntity<?> declineTechJob(@PathVariable Long id) {
-        Optional<TechJob> techJobOptional = techJobRepository.findById(id);
-        if (!techJobOptional.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        TechJob techJob = techJobOptional.get();
-        techJob.setApproved(false); // or you could set a separate 'declined' flag if you have one
-        techJobRepository.save(techJob);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        String message = techJobService.declineTechJob(id);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @GetMapping("/approved")
-    public ResponseEntity<List<TechJob>> getApprovedTechJobs() {
-        List<TechJob> approvedTechJobs = techJobRepository.findByApprovedTrue();
-        if (approvedTechJobs.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+    public ResponseEntity<List<TechJobDto>> getApprovedTechJobs() {
+        List<TechJobDto> approvedTechJobs = techJobService.getApprovedTechJobs();
         return new ResponseEntity<>(approvedTechJobs, HttpStatus.OK);
     }
 
