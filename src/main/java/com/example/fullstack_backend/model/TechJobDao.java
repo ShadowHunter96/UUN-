@@ -25,6 +25,7 @@ import java.util.List;
 
 @Component
 public class TechJobDao {
+
     private final TechJobRepository techJobRepository;
 
     public TechJobDao(TechJobRepository techJobRepository) {
@@ -32,17 +33,17 @@ public class TechJobDao {
     }
 
     public List<TechJobDto> findTechJobs(TechJobFilterDto techJobFilterDto) {
-        List<TechJob> subjectEntities = techJobRepository.findAll(getSubjectSpecification(techJobFilterDto),
+        List<TechJob> techJobEntities = techJobRepository.findAll(getTechJobSpecification(techJobFilterDto),
                 Sort.by(techJobFilterDto.getOrderList()));
-        return ConvertEntities.fromEntities(subjectEntities, TechJobFactory::fromEntity);
+        return ConvertEntities.fromEntities(techJobEntities, TechJobFactory::fromEntity);
     }
 
-    private Specification<TechJob> getSubjectSpecification(TechJobFilterDto filter) {
+    private Specification<TechJob> getTechJobSpecification(TechJobFilterDto filter) {
         return (Root<TechJob> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) ->
-                criteriaBuilder.and(getSubjectPredicateList(filter, root, criteriaBuilder).toArray(new Predicate[0]));
+                criteriaBuilder.and(getTechJobPredicateList(filter, root, criteriaBuilder).toArray(new Predicate[0]));
     }
 
-    private List<Predicate> getSubjectPredicateList(
+    private List<Predicate> getTechJobPredicateList(
             TechJobFilterDto filter, Root<TechJob> root, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
 
@@ -79,20 +80,20 @@ public class TechJobDao {
         if (filter.getApproved() != null) {
             predicates.add(criteriaBuilder.equal(root.get("approved"), filter.getApproved()));
         }
+
+
+
         return predicates;
     }
 
-
-    public Page<TechJobDto> findSubjectPage(TechJobFilterDto techJobFilterDto) {
-        Page<TechJob> userEntityPage = techJobRepository.findAll(getSubjectSpecification(techJobFilterDto),
+    public Page<TechJobDto> findTechJobPage(TechJobFilterDto techJobFilterDto) {
+        Page<TechJob> techJobEntityPage = techJobRepository.findAll(getTechJobSpecification(techJobFilterDto),
                 PageRequest.of(techJobFilterDto.getPage(), techJobFilterDto.getSize(),
                         Sort.by(techJobFilterDto.getOrderList())));
-        List<TechJobDto> supplierDtoList = ConvertEntities
-                .fromEntities(userEntityPage.toList(), TechJobFactory::fromEntity);
-        return new PageImpl<>(supplierDtoList, PageRequest.of(techJobFilterDto.getPage(),
+        List<TechJobDto> techJobDtoList = ConvertEntities
+                .fromEntities(techJobEntityPage.toList(), TechJobFactory::fromEntity);
+        return new PageImpl<>(techJobDtoList, PageRequest.of(techJobFilterDto.getPage(),
                 techJobFilterDto.getSize(), Sort.by(techJobFilterDto.getOrderList())),
-                userEntityPage.getTotalElements());
+                techJobEntityPage.getTotalElements());
     }
-
-
 }

@@ -3,6 +3,7 @@ package com.example.fullstack_backend.controller;
 import com.example.fullstack_backend.factory.TechJobFactory;
 import com.example.fullstack_backend.model.TechJob;
 import com.example.fullstack_backend.model.TechJobDto;
+import com.example.fullstack_backend.model.TechJobFilterDto;
 import com.example.fullstack_backend.model.User;
 import com.example.fullstack_backend.repository.TechJobRepository;
 import com.example.fullstack_backend.service.TechJobService;
@@ -87,6 +88,11 @@ public class TechJobController {
     public ResponseEntity<List<TechJobDto>> getApprovedTechJobs() {
         List<TechJobDto> approvedTechJobs = techJobService.getApprovedTechJobs();
         return new ResponseEntity<>(approvedTechJobs, HttpStatus.OK);
+    }
+    @PostMapping("/filter")
+    public ResponseEntity<List<TechJobDto>> findJobs(@RequestBody TechJobFilterDto techJobFilterDto) {
+        List<TechJobDto> jobs = techJobService.findJobs(techJobFilterDto);
+        return new ResponseEntity<>(jobs, HttpStatus.OK);
     }
 
 
