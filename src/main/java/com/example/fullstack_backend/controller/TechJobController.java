@@ -8,6 +8,7 @@ import com.example.fullstack_backend.model.User;
 import com.example.fullstack_backend.repository.TechJobRepository;
 import com.example.fullstack_backend.service.TechJobService;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -91,9 +92,27 @@ public class TechJobController {
     }
     @PostMapping("/filter")
     public ResponseEntity<List<TechJobDto>> findJobs(@RequestBody TechJobFilterDto techJobFilterDto) {
+        // Ensure the orderList is not null and defaults to sorting by "id"
+        if (techJobFilterDto.getOrderList() == null || techJobFilterDto.getOrderList().isEmpty()) {
+            techJobFilterDto.setOrderList(List.of(Sort.Order.asc("id")));
+        }
+
+        // Map filter fields
+        TechJobDto newFilter = new TechJobDto();
+        newFilter.setName(techJobFilterDto.getName());
+        newFilter.setBaitText(techJobFilterDto.getBaitText());
+        newFilter.setDescription(techJobFilterDto.getDescription());
+        newFilter.setSeniority(techJobFilterDto.getSeniority());
+        newFilter.setEducation(techJobFilterDto.getEducation());
+        newFilter.setCity(techJobFilterDto.getCity());
+        newFilter.setBudget(techJobFilterDto.getBudget());
+
+        // Fetch jobs using the service
         List<TechJobDto> jobs = techJobService.findJobs(techJobFilterDto);
         return new ResponseEntity<>(jobs, HttpStatus.OK);
     }
+
+
 
 
 
